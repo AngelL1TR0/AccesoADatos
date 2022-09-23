@@ -5,6 +5,16 @@ public class Fichero {
     private String nombre;
     private String tipo;
 
+    private String permisos;
+
+    public String getPermisos() {
+        return permisos;
+    }
+
+    public void setPermisos(String permisos) {
+        this.permisos = permisos;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -24,4 +34,6 @@ public class Fichero {
     public Fichero(String nombre) {
         this.nombre = nombre;
     }
+
+
 }
