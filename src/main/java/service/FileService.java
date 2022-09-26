@@ -2,59 +2,77 @@ package service;
 
 import dao.FileDAO;
 import dao.FileDAOImpl;
-import entity.Fichero;
+import entity.FileEntity;
 import exception.FileWithoutExtensionException;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class FileService {
-
     private final FileDAO fileDAO = new FileDAOImpl();
 
-    public void listarFicheros(){
-        File[] ficheros = fileDAO.listarFicheros("/home/angel");
-
-        for (File file : ficheros) {
-            Fichero fichero = new Fichero(file.getName());
-            if(file.isDirectory()){
-                fichero.setTipo("directorio");
+    public void listFiles(String path) {
+        File[] files = fileDAO.listFiles(path);
+        for (File file : files) {
+            FileEntity fileEntity = new FileEntity(file.getName());
+            if (file.isDirectory()) {
+                fileEntity.setType("directorio");
             } else {
-                fichero.setTipo("fichero");
+                fileEntity.setType("fichero");
             }
-            System.out.println("El fichero " + fichero.getNombre() + " es un " + fichero.getTipo());
+            System.out.println("El fichero " + fileEntity.getName() + " es un " + fileEntity.getName());
         }
     }
 
-    public void renameFileWithPermission(String path){
-        File[] files = fileDAO.listarFicheros(path);
-        for (File file : files){
-            Fichero fichero = new Fichero(file.getName());
-            setPermissions(fichero, file);
-            if (fichero.getPermisos().equals("_")){
-                //renombrar
-                String[] extensionAndPath = getExtensionAndPatth(file);
+    public void renameFilesWithPermissions(String path) throws FileWithoutExtensionException {
+        File[] files = fileDAO.listFiles(path);
+        for (File file : files) {
+            FileEntity fileEntity = new FileEntity(file.getName());
+            setPermissions(fileEntity, file);
+            if (!fileEntity.getPermissions().equals("_")) {
+                String[] extensionAndPath = getExtensionAndPathFromFile(file);
+                fileDAO.rename(file, extensionAndPath[1] + fileEntity.getPermissions() + extensionAndPath[0]);
             }
         }
     }
 
-    private String[] getExtensionAndPatth(File file) {
+    private String[] getExtensionAndPathFromFile(File file) throws FileWithoutExtensionException {
         String[] retorno = new String[2];
-        String absolutePath = file.getAbsolutePath();
-        int i = absolutePath.lastIndexOf(".");
-        if (i > 0){
-            retorno[0] = absolutePath.substring(i);
-            retorno[1] = absolutePath.substring(0, i);
+        int i = file.getAbsolutePath().lastIndexOf(".");
+        if (i > 0) {
+            //extension
+            retorno[0] = file.getAbsolutePath().substring(i);
+            retorno[1] = file.getAbsolutePath().substring(0, i);
         } else {
             throw new FileWithoutExtensionException("El fichero no tiene extension");
         }
+        return retorno;
     }
 
-    private void setPermissions(Fichero fichero, File file) {
+    private void setPermissions(FileEntity fichero, File file) {
         String permissions = "_";
         permissions = file.canRead() ? permissions + "R" : permissions;
         permissions = file.canWrite() ? permissions + "W" : permissions;
-        permissions = file.canExecute() ? permissions + "X" : permissions;
+        permissions = file.canRead() ? permissions + "X" : permissions;
+        fichero.setPermissions(permissions);
+    }
 
-        fichero.setPermisos(permissions);
+    public void insertTextInFile(String path) {
+        try (Scanner sc = new Scanner(System.in)) {
+            System.out.println("Introduce un nombre para el fichero: ");
+            String fileName = sc.nextLine();
+            File file = new File(path + fileName + ".txt");
+            if (fileDAO.createFile(file)) {
+                System.out.println("Introduce un texto");
+                String text = sc.nextLine();
+                fileDAO.InsertTextInFile(file, text);
+            } else {
+                System.out.println("No se ha podido crear el fichero");
+            }
+            catch(IOException e){
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

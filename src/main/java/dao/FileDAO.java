@@ -3,5 +3,12 @@ package dao;
 import java.io.File;
 
 public interface FileDAO {
-    File[] listarFicheros(String path);
+
+    public File[] listFiles(String directory);
+
+    void rename(File file, String name);
+
+    boolean createFile(File file);
+
+    void InsertTextInFile(File file, String text);
 }
