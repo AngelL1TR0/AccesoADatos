@@ -5,18 +5,18 @@ import dao.FileDAOImpl;
 import entity.FileEntity;
 import exception.FileWithoutExtensionException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class FileService {
-    private final FileDAO fileDAO = new FileDAOImpl();
 
-    public void listFiles(String path) {
+    FileDAO fileDAO = new FileDAOImpl();
+
+    public void listFiles(String path){
         File[] files = fileDAO.listFiles(path);
         for (File file : files) {
             FileEntity fileEntity = new FileEntity(file.getName());
-            if (file.isDirectory()) {
+            if (file.isDirectory()){
                 fileEntity.setType("directorio");
             } else {
                 fileEntity.setType("fichero");
@@ -30,7 +30,7 @@ public class FileService {
         for (File file : files) {
             FileEntity fileEntity = new FileEntity(file.getName());
             setPermissions(fileEntity, file);
-            if (!fileEntity.getPermissions().equals("_")) {
+            if (!fileEntity.getPermissions().equals("_")){
                 String[] extensionAndPath = getExtensionAndPathFromFile(file);
                 fileDAO.rename(file, extensionAndPath[1] + fileEntity.getPermissions() + extensionAndPath[0]);
             }
@@ -40,7 +40,7 @@ public class FileService {
     private String[] getExtensionAndPathFromFile(File file) throws FileWithoutExtensionException {
         String[] retorno = new String[2];
         int i = file.getAbsolutePath().lastIndexOf(".");
-        if (i > 0) {
+        if (i>0){
             //extension
             retorno[0] = file.getAbsolutePath().substring(i);
             retorno[1] = file.getAbsolutePath().substring(0, i);
@@ -59,20 +59,21 @@ public class FileService {
     }
 
     public void insertTextInFile(String path) {
-        try (Scanner sc = new Scanner(System.in)) {
+        try (Scanner sc = new Scanner(System.in)){
             System.out.println("Introduce un nombre para el fichero: ");
             String fileName = sc.nextLine();
             File file = new File(path + fileName + ".txt");
-            if (fileDAO.createFile(file)) {
-                System.out.println("Introduce un texto");
+            if (fileDAO.createNewFile(file)){
+                System.out.println("Introduce un texto: ");
                 String text = sc.nextLine();
-                fileDAO.InsertTextInFile(file, text);
+                fileDAO.insertTextIntoFile(file, text);
+                System.out.println(fileDAO.readTextInFile(file));
             } else {
-                System.out.println("No se ha podido crear el fichero");
+                System.out.println("The file cannot be created");
             }
-            catch(IOException e){
-                throw new RuntimeException(e);
-            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

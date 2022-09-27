@@ -1,9 +1,8 @@
 package dao;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-public class FileDAOImpl implements FileDAO{
+public class FileDAOImpl implements FileDAO {
 
     @Override
     public File[] listFiles(String directorio) {
@@ -17,14 +16,33 @@ public class FileDAOImpl implements FileDAO{
     }
 
     @Override
-    public boolean createFile(File file) throws IOException {
+    public boolean createNewFile(File file) throws IOException {
         return file.createNewFile();
+    }
+    @Override
+    public void insertTextIntoFile(File file, String text) {
+        try (FileWriter fileWriter = new FileWriter(file)){
+            fileWriter.write(text);
+            fileWriter.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void InsertTextInFile(File file, String text) {
-
+    public String readTextInFile(File file) {
+        try (FileReader fileReader = new FileReader(file);
+             BufferedReader br = new BufferedReader(fileReader)){
+            String text = "";
+            String line;
+            System.out.printf("Lectura del fichero %s: \n", file.getName());
+            while((line=br.readLine())!=null) {
+                text += line + "\n";
+            }
+            return text;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
-
 
 }

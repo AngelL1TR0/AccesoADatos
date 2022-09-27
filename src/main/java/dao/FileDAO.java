@@ -1,6 +1,8 @@
 package dao;
 
+
 import java.io.File;
+import java.io.IOException;
 
 public interface FileDAO {
 
@@ -8,7 +10,9 @@ public interface FileDAO {
 
     void rename(File file, String name);
 
-    boolean createFile(File file);
+    boolean createNewFile(File file) throws IOException;
 
-    void InsertTextInFile(File file, String text);
+    void insertTextIntoFile(File file, String text);
+
+    String readTextInFile(File file);
 }

@@ -1,11 +1,15 @@
 package entity;
 
 public class FileEntity {
-
     private String name;
     private String type;
-
     private String permissions;
+
+
+    public FileEntity(String name, String type) {
+        this.name = name;
+        this.type = type;
+    }
 
     public FileEntity(String name) {
         this.name = name;
@@ -46,6 +50,4 @@ public class FileEntity {
     public void setPermissions(String permissions) {
         this.permissions = permissions;
     }
-
-
 }
