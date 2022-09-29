@@ -76,4 +76,15 @@ public class FileService {
             throw new RuntimeException(e);
         }
     }
+
+    public void insertNum(String path) {
+
+        try (Scanner sc = new Scanner(System.in)){
+            System.out.println("archivo antes de insertar:");
+            fileDAO.readIntInFile()
+            System.out.println("Introduce un numero");
+            int num = sc.nextInt();
+
+        }
+    }
 }

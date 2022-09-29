@@ -5,6 +5,8 @@ public class FileEntity {
     private String type;
     private String permissions;
 
+    private int num;
+
 
     public FileEntity(String name, String type) {
         this.name = name;
@@ -49,5 +51,17 @@ public class FileEntity {
 
     public void setPermissions(String permissions) {
         this.permissions = permissions;
+    }
+
+    public FileEntity(int num) {
+        this.num = num;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
     }
 }

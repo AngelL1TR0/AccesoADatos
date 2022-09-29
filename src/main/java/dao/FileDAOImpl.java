@@ -45,4 +45,18 @@ public class FileDAOImpl implements FileDAO {
         }
     }
 
+    @Override
+    public int readIntInFile(File file) {
+        try(FileReader fileReader = new FileReader(file);
+            BufferedReader br = new BufferedReader(fileReader)){
+            int nums = 0;
+            System.out.println(file.getName()+":");
+            while ((br.readLine()) != null){
+                nums += nums;
+            }
+            return nums;
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
 }
