@@ -70,7 +70,7 @@ public class FileDAOImpl implements FileDAO {
     @Override
     public void updateIntegerInStreamFile(File file, int num, int pos) throws  IOException {
         try(RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")){
-            randomAccessFile.seek(pos = 4);
+            randomAccessFile.seek(pos * 4);
             randomAccessFile.writeInt(num);
 
         }
