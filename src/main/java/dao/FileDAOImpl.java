@@ -16,10 +16,6 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public boolean createNewFile(File file) throws IOException {
-        return file.createNewFile();
-    }
-    @Override
     public void insertTextIntoFile(File file, String text) {
         try (FileWriter fileWriter = new FileWriter(file)){
             fileWriter.write(text);
@@ -30,33 +26,53 @@ public class FileDAOImpl implements FileDAO {
     }
 
     @Override
-    public String readTextInFile(File file) {
+    public void readTextInFile(File file, String text) {
         try (FileReader fileReader = new FileReader(file);
              BufferedReader br = new BufferedReader(fileReader)){
-            String text = "";
             String line;
             System.out.printf("Lectura del fichero %s: \n", file.getName());
             while((line=br.readLine())!=null) {
-                text += line + "\n";
+                System.out.println(line);
             }
-            return text;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Override
-    public int readIntInFile(File file) {
-        try(FileReader fileReader = new FileReader(file);
-            BufferedReader br = new BufferedReader(fileReader)){
-            int nums = 0;
-            System.out.println(file.getName()+":");
-            while ((br.readLine()) != null){
-                nums += nums;
+    public void showDataStreamFile(File file) {
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")){
+            randomAccessFile.seek(0);
+            while (!isEOF(randomAccessFile)) {
+                int entero = randomAccessFile.readInt();
+                System.out.println(entero);
+                if (isEOF(randomAccessFile)){
+                    System.out.println("FIN de fichero");
+                }
             }
-            return nums;
-        } catch (IOException e){
-            throw new RuntimeException(e);
+        } catch (EOFException e) {
+            System.err.println("FIN de fichero");
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    public void insertIntoDataStreamFile(int number, File file) throws IOException {
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")) {
+            randomAccessFile.seek(randomAccessFile.length());
+            randomAccessFile.writeInt(number);
+        }
+    }
+
+    private static boolean isEOF(RandomAccessFile randomAccessFile) throws IOException {
+        return randomAccessFile.length() == randomAccessFile.getFilePointer();
+    }
+
+    @Override
+    public void updateIntegerInStreamFile(File file, int num, int pos) throws  IOException {
+        try(RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")){
+            randomAccessFile.seek(pos = 4);
+            randomAccessFile.writeInt(num);
+
         }
     }
 }
