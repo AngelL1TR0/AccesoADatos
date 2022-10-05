@@ -5,8 +5,10 @@ import dao.FileDAOImpl;
 import entity.FileEntity;
 import exception.FileWithoutExtensionException;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
+
 
 public class FileService {
 
@@ -111,5 +113,10 @@ public class FileService {
             throw new RuntimeException(e);
         }
         System.out.println();
+    }
+
+    public void createExcell(String path) {
+        File file = new File(path + ".xlsx");
+
     }
 }
