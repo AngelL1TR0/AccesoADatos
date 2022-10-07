@@ -114,9 +114,4 @@ public class FileService {
         }
         System.out.println();
     }
-
-    public void createExcell(String path) {
-        File file = new File(path + ".xlsx");
-
-    }
 }
