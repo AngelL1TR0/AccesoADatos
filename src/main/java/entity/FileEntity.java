@@ -4,7 +4,6 @@ public class FileEntity {
     private String name;
     private String type;
     private String permissions;
-    private int size;
 
 
     public FileEntity(String name, String type) {
@@ -51,15 +50,5 @@ public class FileEntity {
     public void setPermissions(String permissions) {
         this.permissions = permissions;
     }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
-
 }
 

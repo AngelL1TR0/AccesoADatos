@@ -7,6 +7,7 @@ import exception.FileWithoutExtensionException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 
@@ -113,16 +114,5 @@ public class FileService {
             throw new RuntimeException(e);
         }
         System.out.println();
-    }
-
-    public void readFile(String path) {
-        File[] files = fileDAO.listFiles(path);
-        for (File file : files) {
-            FileEntity fileName = new FileEntity(file.getName());
-            fileName.getPermissions();
-            fileName.getSize();
-
-            System.out.println("El fichero " + fileName.getName() + fileName.getPermissions() + fileName.getSize());
-        }
     }
 }
