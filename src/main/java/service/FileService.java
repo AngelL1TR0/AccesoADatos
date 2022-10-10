@@ -114,4 +114,15 @@ public class FileService {
         }
         System.out.println();
     }
+
+    public void readFile(String path) {
+        File[] files = fileDAO.listFiles(path);
+        for (File file : files) {
+            FileEntity fileName = new FileEntity(file.getName());
+            fileName.getPermissions();
+            fileName.getSize();
+
+            System.out.println("El fichero " + fileName.getName() + fileName.getPermissions() + fileName.getSize());
+        }
+    }
 }
